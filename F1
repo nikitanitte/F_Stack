@@ -1,0 +1,20 @@
+import React, { useState } from "react";
+function App() {
+ const [percentages, setPercentages] = useState(Array(30).fill(0));
+ const [results, setResults] = useState({ distinction: 0, firstClass: 0 });
+ const calculateResults = () => {
+ const distinction = percentages.filter(p => p >= 85).length;
+ const firstClass = percentages.filter(p => p >= 60 && p < 85).length;
+ setResults({ distinction, firstClass });
+ };
+ return (
+ <div>
+ <h1>Scholarship Counter</h1>
+ <input type="text" onChange={e => setPercentages(e.target.value.split(",").map(Number))} 
+placeholder="Enter percentages" />
+ <button onClick={calculateResults}>Calculate</button>
+ <div>Distinction: {results.distinction} | First Class: {results.firstClass}</div>
+ </div>
+ );
+}
+export default App;
