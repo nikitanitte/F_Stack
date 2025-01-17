@@ -1,0 +1,30 @@
+package com.example.demo;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Component;
+@SpringBootApplication
+public class DependencyInjectionExample {
+ public static void main(String[] args) {
+ SpringApplication.run(DependencyInjectionExample.class, args);
+ }
+}
+@Component
+class GreetingService {
+ public String greet() {
+ return "Hello from Dependency Injection in Spring!";
+ }
+}
+@RestController
+class GreetingController {
+ private final GreetingService;
+ public GreetingController(GreetingService greetingService) {
+ this.greetingService = greetingService;
+ }
+ @GetMapping("/greet")
+ public String greet() {
+ return "<html><body><h1>Deoendency Injection</h1><p>" + greetingService.greet() + 
+"</p></body></html>";
+ }
+}
