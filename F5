@@ -1,0 +1,51 @@
+package com.example.demo;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+@SpringBootApplication
+public class BeanConfigurationApplication {
+ public static void main(String[] args) {
+ SpringApplication.run(BeanConfigurationApplication.class, args);
+ }
+ @Bean
+ @Scope("singleton") // Singleton scope
+ public ServiceBean serviceBean() {
+ return new ServiceBean();
+ }
+ @Bean
+ @Scope("prototype") // Prototype scope
+ public ClientBean clientBean(ServiceBean serviceBean) {
+ return new ClientBean(serviceBean);
+ }
+ public static class ServiceBean {
+ public String getServiceMessage() {
+ return "ServiceBean is working!";
+ }
+ }
+ public static class ClientBean {
+ private final ServiceBean;
+ @Autowired
+ public ClientBean(ServiceBean serviceBean) {
+ this.serviceBean = serviceBean;
+ }
+ public String getClientMessage() {
+ return "ClientBean is using: " + serviceBean.getServiceMessage();
+ }
+ }
+ @RestController
+ public static class BeanController {
+ private final ClientBean;
+ @Autowired
+ public BeanController(ClientBean clientBean) {
+ this.clientBean = clientBean;
+ }
+ @GetMapping("/message")
+ public String getMessage() {
+ return "<html><body><h1>Bean Configuration and Management</h1><p>" + 
+clientBean.getClientMessage() + "</p></body></html>";
+ }
+ 
